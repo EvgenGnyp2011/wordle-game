@@ -1,1 +1,17 @@
-
+body{
+    background: rgb(0, 4, 36)
+}
+h1{
+    color: aliceblue;
+}
+.grid{
+    grid-template-columns: repeat(5, 0fr);
+    display: grid;
+}
+.tile{
+    border-radius: 10px;
+    border: 3px solid rgb(185, 200, 255);
+    width: 70px;
+    height: 70px;
+    margin: 5px;
+}

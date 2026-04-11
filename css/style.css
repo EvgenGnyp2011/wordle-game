@@ -8,6 +8,7 @@ body {
   flex-direction: column;
   background: rgb(0, 4, 36);
   font-family: sans-serif;
+  gap: 20px;
 }
 
 
@@ -71,7 +72,7 @@ h1{
     color: aliceblue;
 }
 .grid{
-    grid-template-columns: repeat(5, 0fr);
+    grid-template-columns: repeat(5, 1fr);
     display: grid;
     margin-bottom: 15px;
 }
@@ -80,5 +81,17 @@ h1{
     border: 3px solid rgb(185, 200, 255);
     width: 70px;
     height: 70px;
-    margin: 5px;
+    display: flex;           
+    align-items: center;     
+    justify-content: center; 
+    color: white;            
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.wordle-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 20px;
 }

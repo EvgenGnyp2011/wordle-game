@@ -41,7 +41,7 @@ function showError(gameState) {
 }
 
 let testState = {
-    board: ["привіт", "сонечко"], 
+    board: ["буква", "пошта"], 
     error: null
 };
 

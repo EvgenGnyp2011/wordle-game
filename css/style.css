@@ -76,6 +76,9 @@ h1{
     grid-template-rows: repeat(6, 70px);
     display: grid !important;
     margin-bottom: 15px;
+    width: fit-content;
+    gap: 10px;  
+    margin: 20px auto;
 }
 .tile{
     border-radius: 10px;
@@ -89,6 +92,7 @@ h1{
     font-weight: bold;
     text-transform: uppercase;
     color: white;
+    box-sizing: border-box;
 }
 .wordle-container {
     display: flex;

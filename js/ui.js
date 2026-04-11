@@ -1,4 +1,3 @@
-
 function renderBoard(gameState) {
     let board = gameState.board; 
     let tiles = document.querySelectorAll('.tile');
@@ -20,7 +19,6 @@ function renderBoard(gameState) {
         }
     });
 }
-
 
 window.addEventListener('keydown', (event) => {
     let key = event.key.toLowerCase();

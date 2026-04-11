@@ -72,8 +72,9 @@ h1{
     color: aliceblue;
 }
 .grid{
-    grid-template-columns: repeat(5, 1fr);
-    display: grid;
+    grid-template-columns: repeat(5, 70px); 
+    grid-template-rows: repeat(6, 70px);
+    display: grid !important;
     margin-bottom: 15px;
 }
 .tile{

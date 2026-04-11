@@ -1,27 +1,17 @@
 function renderBoard(gameState) {
-    let board = gameState.board; 
-    let tiles = document.querySelectorAll('.tile');
-    
-    let allLetters = [];
-    board.forEach(word => {
-        let letters = word.split('');
-        while (letters.length < 5) {
-            letters.push('');
-        }
-        allLetters = allLetters.concat(letters);
+    const tiles = document.querySelectorAll('.tile'); 
+    const allLetters = gameState.board.flatMap(word => {
+        while (letters.length < 5) letters.push('');
+        return letters;
     });
 
     tiles.forEach((tile, index) => {
-        if (allLetters[index]) {
-            tile.textContent = allLetters[index];
-        } else {
-            tile.textContent = '';
-        }
+        tile.textContent = allLetters[index] ?? '';
     });
 }
 
 window.addEventListener('keydown', (event) => {
-    let key = event.key.toLowerCase();
+    const key = event.key.toLowerCase();
     
     if (/^[а-щьюяіїєґ]$/.test(key)) {
         console.log("Введено літеру:", key);
@@ -33,16 +23,7 @@ window.addEventListener('keydown', (event) => {
 });
 
 function showError(gameState) {
-    let error = gameState.error;
-    if (error) {
-
-        alert(error);
+    if (gameState.error) {
+        console.error("Помилка гри:", gameState.error);
     }
 }
-
-let testState = {
-    board: ["буква", "пошта"], 
-    error: null
-};
-
-renderBoard(testState);

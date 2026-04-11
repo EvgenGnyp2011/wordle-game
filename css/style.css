@@ -39,11 +39,7 @@ body {
 
 .key:active {
   transform: scale(0.95);
-}
-
-.key:nth-child(33) {
-  margin-right: 0;
-  width: 150px;
+  background: rgb(217, 247, 255);
 }
 
 .buttons{
@@ -77,6 +73,7 @@ h1{
 .grid{
     grid-template-columns: repeat(5, 0fr);
     display: grid;
+    margin-bottom: 15px;
 }
 .tile{
     border-radius: 10px;

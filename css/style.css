@@ -1,1 +1,119 @@
 
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: rgb(0, 4, 36);
+  font-family: sans-serif;
+  gap: 20px;
+}
+
+
+.key {
+  --size: 60px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 16px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 0px 1px 2px rgba(0, 50, 100, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin: 5px;
+}
+
+.key:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.3);
+}
+
+.key:active {
+  transform: scale(0.95);
+  background: rgb(217, 247, 255);
+}
+
+.buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.up{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.medium{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bottom{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1{
+    color: aliceblue;
+}
+.grid{
+    grid-template-columns: repeat(5, 70px); 
+    grid-template-rows: repeat(6, 70px);
+    display: grid !important;
+    margin-bottom: 15px;
+    width: fit-content;
+    gap: 10px;  
+    margin: 20px auto;
+}
+.tile{
+    border-radius: 10px;
+    border: 3px solid rgb(185, 200, 255) !important;
+    width: 70px;  
+    height: 70px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    box-sizing: border-box;
+}
+.wordle-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 20px;
+}
+.tile.correct {
+    background-color: #6aaa64 !important;
+    color: white;
+    border-color: #6aaa64;
+}
+
+.tile.misplaced {
+    background-color: #c9b458 !important;
+    color: white;
+    border-color: #c9b458;
+}
+
+.tile.wrong {
+    background-color: #787c7e !important;
+    color: white;
+    border-color: #787c7e;
+}

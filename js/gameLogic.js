@@ -1,116 +1,204 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const WORD_LENGTH = 5;
-    const MAX_ATTEMPTS = 6;
-    
-    let wordsSource = typeof Words !== 'undefined' ? Words : (typeof WORDS !== 'undefined' ? WORDS : []);
-    const validWords = wordsSource.filter(w => w && w.length === WORD_LENGTH).map(w => w.toUpperCase());
-    
-    if (validWords.length === 0) return;
 
-    const targetWord = validWords[Math.floor(Math.random() * validWords.length)];
-    let currentGuess = "";
-    let guesses = [];
-    let isGameOver = false;
+const WORD_LENGTH = 5;
+const MAX_ATTEMPTS = 6;
 
-    const tiles = document.querySelectorAll('.tile');
-    const keyboardMap = {};
-    document.querySelectorAll('.key').forEach(key => {
-        keyboardMap[key.textContent.trim().toUpperCase()] = key;
-    });
+let wordsSource = [];
 
-    function handleInput(key) {
-        if (isGameOver) return;
+if (typeof Words !== "undefined") wordsSource = Words;
+else if (typeof WORDS !== "undefined") wordsSource = WORDS;
 
-        if (key === 'ENTER') {
-            if (currentGuess.length === WORD_LENGTH) checkWord();
-        } else if (key === 'BACKSPACE' || key === '⌫') {
-            currentGuess = currentGuess.slice(0, -1);
-            updateGrid();
-        } else if (currentGuess.length < WORD_LENGTH && key.length === 1) {
-            if (/^[А-ЯЄІЇҐ]$/.test(key)) {
-                currentGuess += key;
-                updateGrid();
-            }
+const validWords = wordsSource
+    .filter(w => w && w.length === WORD_LENGTH)
+    .map(w => w.toUpperCase());
+
+if(validWords.length === 0){
+    console.error("Словник не знайдено");
+    return;
+}
+
+let targetWord = validWords[Math.floor(Math.random()*validWords.length)];
+
+let currentGuess = "";
+let guessesCount = 0;
+let isGameOver = false;
+
+const tiles = document.querySelectorAll(".tile");
+const keys = document.querySelectorAll(".key");
+
+const keyboard = {};
+
+keys.forEach(btn=>{
+    const letter = btn.textContent.trim().toUpperCase();
+    keyboard[letter] = btn;
+});
+
+function handleInput(key){
+
+    if(isGameOver) return;
+
+    if(key === "ENTER"){
+        if(currentGuess.length === WORD_LENGTH){
+            checkWord();
+        }
+        return;
+    }
+
+    if(key === "BACKSPACE" || key === "⌫"){
+        currentGuess = currentGuess.slice(0,-1);
+        updateGrid();
+        return;
+    }
+
+    const ukr = /^[А-ЯЄІЇҐ]$/;
+
+    if(ukr.test(key) && currentGuess.length < WORD_LENGTH){
+        currentGuess += key;
+        updateGrid();
+    }
+}
+
+function updateGrid(){
+
+    const start = guessesCount * WORD_LENGTH;
+
+    for(let i=0;i<WORD_LENGTH;i++){
+
+        const tile = tiles[start+i];
+
+        tile.textContent = currentGuess[i] || "";
+
+    }
+
+}
+
+function checkWord(){
+
+    const guessLetters = currentGuess.split("");
+    const targetLetters = targetWord.split("");
+
+    const result = new Array(WORD_LENGTH).fill("wrong");
+
+    for(let i=0;i<WORD_LENGTH;i++){
+        if(guessLetters[i] === targetLetters[i]){
+            result[i] = "correct";
+            targetLetters[i] = null;
         }
     }
 
-    function updateGrid() {
-        const rowOffset = guesses.length * WORD_LENGTH;
-        for (let i = 0; i < WORD_LENGTH; i++) {
-            const tile = tiles[rowOffset + i];
-            if (tile) tile.textContent = currentGuess[i] || "";
+    for(let i=0;i<WORD_LENGTH;i++){
+
+        if(result[i] === "correct") continue;
+
+        const index = targetLetters.indexOf(guessLetters[i]);
+
+        if(index !== -1){
+            result[i] = "misplaced";
+            targetLetters[index] = null;
         }
+
     }
 
-    function checkWord() {
-        const rowOffset = guesses.length * WORD_LENGTH;
-        const guessLetters = currentGuess.split('');
-        const targetLetters = [...targetWord];
-        const results = Array(WORD_LENGTH).fill('wrong');
+    const start = guessesCount * WORD_LENGTH;
 
-        guessLetters.forEach((l, i) => {
-            if (l === targetLetters[i]) {
-                results[i] = 'correct';
-                targetLetters[i] = null;
-            }
-        });
+    for(let i=0;i<WORD_LENGTH;i++){
 
-        guessLetters.forEach((l, i) => {
-            if (results[i] !== 'correct' && targetLetters.includes(l)) {
-                results[i] = 'misplaced';
-                targetLetters[targetLetters.indexOf(l)] = null;
-            }
-        });
+        const tile = tiles[start+i];
+        const status = result[i];
+        const letter = guessLetters[i];
 
-        results.forEach((res, i) => {
-            const tile = tiles[rowOffset + i];
-            const letter = guessLetters[i];
-            const keyBtn = keyboardMap[letter];
+        tile.classList.add(status);
 
-            if (tile) {
-                tile.classList.add(res);
-                const color = res === 'correct' ? '#6aaa64' : (res === 'misplaced' ? '#c9b458' : '#787c7e');
-                tile.style.backgroundColor = color;
-                tile.style.borderColor = color;
-                tile.style.color = 'white';
+        const key = keyboard[letter];
 
-                if (keyBtn) updateKeyboardColor(keyBtn, res);
-            }
-        });
-
-        if (currentGuess === targetWord) {
-            isGameOver = true;
-            setTimeout(() => alert("ПЕРЕМОГА!"), 500);
-        } else {
-            guesses.push(currentGuess);
-            currentGuess = "";
-            if (guesses.length === MAX_ATTEMPTS) {
-                isGameOver = true;
-                setTimeout(() => alert(`СЛОВО: ${targetWord}`), 500);
-            }
+        if(key){
+            updateKeyColor(key,status);
         }
+
     }
 
-    function updateKeyboardColor(btn, status) {
-        const currentRes = btn.getAttribute('data-status');
-        if (currentRes === 'correct') return;
-        if (currentRes === 'misplaced' && status === 'wrong') return;
+    if(currentGuess === targetWord){
 
-        btn.setAttribute('data-status', status);
-        btn.style.backgroundColor = status === 'correct' ? '#6aaa64' : (status === 'misplaced' ? '#c9b458' : '#3a3a3c');
-        btn.style.color = 'white';
+        isGameOver = true;
+
+        setTimeout(()=>{
+            alert("Перемога!");
+        },200);
+
+        return;
     }
 
-    document.querySelectorAll('.key').forEach(key => {
-        key.addEventListener('click', () => {
-            const val = key.textContent.trim().toUpperCase();
-            handleInput(val === '⌫' ? 'BACKSPACE' : val);
-        });
+    guessesCount++;
+    currentGuess="";
+
+    if(guessesCount === MAX_ATTEMPTS){
+
+        isGameOver = true;
+
+        setTimeout(()=>{
+            alert("Слово було: "+targetWord);
+        },200);
+
+    }
+
+}
+
+function updateKeyColor(btn,status){
+
+    const old = btn.dataset.status;
+
+    if(old === "correct") return;
+
+    if(old === "misplaced" && status === "wrong") return;
+
+    btn.dataset.status = status;
+
+    btn.classList.remove("correct","misplaced","wrong");
+    btn.classList.add(status);
+
+}
+
+const latinToUkr = {
+    q: "Й", w: "Ц", e: "У", r: "К", t: "Е", y: "Н", u: "Г", i: "Ш", o: "Щ", p: "З",
+    "[": "Х", "]": "Ї",
+    a: "Ф", s: "І", d: "В", f: "А", g: "П", h: "Р", j: "О", k: "Л", l: "Д",
+    ";": "Ж", "'": "Є",
+    z: "Я", x: "Ч", c: "С", v: "М", b: "И", n: "Т", m: "Ь",
+    ",": "Б", ".": "Ю"
+};
+
+window.addEventListener("keydown", e => {
+    const rawKey = e.key;
+
+    if (rawKey === "Enter" || rawKey === "Backspace") {
+        e.preventDefault();
+    }
+
+    let key = rawKey;
+    if (typeof key === "string" && key.length === 1) {
+        const lower = key.toLowerCase();
+        key = latinToUkr[lower] || key.toUpperCase();
+    } else if (key === "Enter") {
+        key = "ENTER";
+    } else if (key === "Backspace") {
+        key = "BACKSPACE";
+    } else if (typeof key === "string") {
+        key = key.toUpperCase();
+    }
+
+    handleInput(key);
+});
+
+keys.forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+
+        const key = btn.textContent.trim().toUpperCase();
+
+        handleInput(key === "⌫" ? "BACKSPACE" : key);
+
     });
 
-    window.addEventListener('keydown', (e) => {
-        const k = e.key.toUpperCase();
-        if (k === 'ENTER' || k === 'BACKSPACE') handleInput(k);
-        else handleInput(k);
-    });
+});
+
 });

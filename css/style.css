@@ -100,20 +100,26 @@ h1{
     align-items: center;
     gap: 20px;
 }
+/* Стилі для клітинок сітки */
 .tile.correct {
     background-color: #6aaa64 !important;
-    color: white;
-    border-color: #6aaa64;
+    border-color: #6aaa64 !important;
+    color: white !important;
 }
 
 .tile.misplaced {
-    background-color: #c9b458 !important;
-    color: white;
-    border-color: #c9b458;
+    background-color: #bcac21 !important;
+    border-color: #bcac21 !important;
+    color: white !important;
 }
 
 .tile.wrong {
-    background-color: #787c7e !important;
-    color: white;
-    border-color: #787c7e;
+    background-color: #801414 !important;
+    border-color: #801414 !important;
+    color: white !important;
 }
+
+/* Стилі для кнопок клавіатури */
+.key.correct { background-color: #6aaa64 !important; }
+.key.misplaced { background-color: #bcac21 !important; }
+.key.wrong { background-color: #801414 !important; }

@@ -1,10 +1,7 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const WORD_LENGTH = 5;
     const MAX_ATTEMPTS = 6;
     
-    if (typeof WORDS === 'undefined' || !WORDS.length) return;
-
     const targetWord = WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
     let currentGuess = "";
     let guesses = [];
@@ -84,6 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             alert(msg);
             location.reload();
-        }, 200);
+        }, 250);
     }
 });

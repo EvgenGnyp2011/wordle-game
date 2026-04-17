@@ -107,9 +107,9 @@ h1{
 }
 
 .tile.misplaced {
-    background-color: #525252 !important;
+    background-color: #858585 !important;
     color: white;
-    border-color: #525252;
+    border-color: #858585;
 }
 
 .tile.wrong {

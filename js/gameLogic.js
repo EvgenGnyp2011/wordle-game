@@ -2,35 +2,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const WORD_LENGTH = 5;
     const MAX_ATTEMPTS = 6;
     
-    const targetWord = WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
+    let wordsSource = typeof Words !== 'undefined' ? Words : (typeof WORDS !== 'undefined' ? WORDS : []);
+    const validWords = wordsSource.filter(w => w && w.length === WORD_LENGTH).map(w => w.toUpperCase());
+    
+    if (validWords.length === 0) return;
+
+    const targetWord = validWords[Math.floor(Math.random() * validWords.length)];
     let currentGuess = "";
     let guesses = [];
+    let isGameOver = false;
 
     const tiles = document.querySelectorAll('.tile');
-    const keys = document.querySelectorAll('.key');
-
-    keys.forEach(key => {
-        key.addEventListener('click', () => {
-            handleInput(key.textContent.trim().toUpperCase());
-        });
-    });
-
-    window.addEventListener('keydown', (e) => {
-        const key = e.key.toUpperCase();
-        if (key === 'ENTER') handleInput('ENTER');
-        else if (key === 'BACKSPACE' || key === 'DELETE') handleInput('BACKSPACE');
-        else if (/^[А-ЯЄІЇҐ]$/.test(key)) handleInput(key);
+    const keyboardMap = {};
+    document.querySelectorAll('.key').forEach(key => {
+        keyboardMap[key.textContent.trim().toUpperCase()] = key;
     });
 
     function handleInput(key) {
+        if (isGameOver) return;
+
         if (key === 'ENTER') {
             if (currentGuess.length === WORD_LENGTH) checkWord();
-        } else if (key === 'BACKSPACE') {
+        } else if (key === 'BACKSPACE' || key === '⌫') {
             currentGuess = currentGuess.slice(0, -1);
             updateGrid();
         } else if (currentGuess.length < WORD_LENGTH && key.length === 1) {
-            currentGuess += key;
-            updateGrid();
+            if (/^[А-ЯЄІЇҐ]$/.test(key)) {
+                currentGuess += key;
+                updateGrid();
+            }
         }
     }
 
@@ -63,24 +63,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         results.forEach((res, i) => {
-            tiles[rowOffset + i].classList.add(res);
+            const tile = tiles[rowOffset + i];
+            const letter = guessLetters[i];
+            const keyBtn = keyboardMap[letter];
+
+            if (tile) {
+                tile.classList.add(res);
+                const color = res === 'correct' ? '#6aaa64' : (res === 'misplaced' ? '#c9b458' : '#787c7e');
+                tile.style.backgroundColor = color;
+                tile.style.borderColor = color;
+                tile.style.color = 'white';
+
+                if (keyBtn) updateKeyboardColor(keyBtn, res);
+            }
         });
 
         if (currentGuess === targetWord) {
-            endGame("Вітаємо! Ви вгадали!");
+            isGameOver = true;
+            setTimeout(() => alert("ПЕРЕМОГА!"), 500);
         } else {
             guesses.push(currentGuess);
             currentGuess = "";
             if (guesses.length === MAX_ATTEMPTS) {
-                endGame("Слово було: " + targetWord);
+                isGameOver = true;
+                setTimeout(() => alert(`СЛОВО: ${targetWord}`), 500);
             }
         }
     }
 
-    function endGame(msg) {
-        setTimeout(() => {
-            alert(msg);
-            location.reload();
-        }, 250);
+    function updateKeyboardColor(btn, status) {
+        const currentRes = btn.getAttribute('data-status');
+        if (currentRes === 'correct') return;
+        if (currentRes === 'misplaced' && status === 'wrong') return;
+
+        btn.setAttribute('data-status', status);
+        btn.style.backgroundColor = status === 'correct' ? '#6aaa64' : (status === 'misplaced' ? '#c9b458' : '#3a3a3c');
+        btn.style.color = 'white';
     }
+
+    document.querySelectorAll('.key').forEach(key => {
+        key.addEventListener('click', () => {
+            const val = key.textContent.trim().toUpperCase();
+            handleInput(val === '⌫' ? 'BACKSPACE' : val);
+        });
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const k = e.key.toUpperCase();
+        if (k === 'ENTER' || k === 'BACKSPACE') handleInput(k);
+        else handleInput(k);
+    });
 });

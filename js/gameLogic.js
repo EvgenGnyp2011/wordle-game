@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     const WORD_LENGTH = 5;
     const MAX_ATTEMPTS = 6;
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentRes === 'misplaced' && status === 'wrong') return;
 
         btn.setAttribute('data-status', status);
-        btn.style.backgroundColor = status === 'correct' ? '#6aaa64' : (status === 'misplaced' ? '#c9b458' : '#3a3a3c');
+        btn.style.backgroundColor = status === 'correct' ? '#6aaa64' : (status === 'misplaced' ? '#525252' : '#ff0000');
         btn.style.color = 'white';
     }
 
